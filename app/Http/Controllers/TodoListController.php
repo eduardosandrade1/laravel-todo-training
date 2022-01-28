@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TodoListStoreRequest;
 use App\Models\TodoList;
 use Illuminate\Http\Request;
 
@@ -14,15 +15,8 @@ class TodoListController extends Controller
         return view('todo-list', compact('todos'));
     }
 
-    public function store(Request $request)
+    public function store(TodoListStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|min:5'
-        ],
-        [
-           'name.required' => 'O nome é requirido!'
-        ]);
-
         $toDoList       = new TodoList();
         $toDoList->name = $request->post('name');
         $toDoList->save();
