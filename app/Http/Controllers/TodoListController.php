@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoListStoreRequest;
-use App\Mail\NewToDoListMail;
+use App\Jobs\NewTodoListMail;
 use App\Models\TodoList;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 class TodoListController extends Controller
 {
@@ -23,10 +22,7 @@ class TodoListController extends Controller
         $toDoList->name = $request->post('name');
         $toDoList->save();
 
-        Mail::send(
-            new NewToDoListMail($toDoList)
-        );
-
+        NewTodoListMail::dispatch($toDoList)->delay(now()->addMinute());
 
         return redirect()->route('todo');
     }
