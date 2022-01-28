@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoListStoreRequest;
+use App\Mail\NewToDoListMail;
 use App\Models\TodoList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TodoListController extends Controller
 {
@@ -20,6 +22,11 @@ class TodoListController extends Controller
         $toDoList       = new TodoList();
         $toDoList->name = $request->post('name');
         $toDoList->save();
+
+        Mail::send(
+            new NewToDoListMail($toDoList)
+        );
+
 
         return redirect()->route('todo');
     }
